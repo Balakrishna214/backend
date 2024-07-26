@@ -56,6 +56,7 @@ app.post("/post", async (request, response) => {
         console.log("Inserted successfully");
         response.send("Successfully inserted");
     } catch (error) {
+        console.log("error");
         console.error(`Error inserting data: ${error.message}`);
         response.status(500).send("Failed to insert data");
     }
