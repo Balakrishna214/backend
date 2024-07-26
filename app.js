@@ -13,7 +13,6 @@ app.use(express.json())
 
 let db=null
 
-
 const intailizAndStartServer=async ()=>{
     try{
     db= await open({
@@ -39,6 +38,7 @@ app.get("/",async(request,resposne)=>{
     const query=`
     select * From users;`;
     const dbResponse=await db.all(query)
+    console.log(dbResponse);
     resposne.send(dbResponse)
 })
 
