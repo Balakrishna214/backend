@@ -41,6 +41,24 @@ app.get('/getProfiles', async (req, res) => {
     }
 });
 
+app.get('/sort', async (req, res) => {
+    try {
+        const db = client.db('myDatabase'); // Ensure the database name is correct
+        const collection = db.collection('users'); // Ensure the collection name is correct
+        console.log("Fetching sorted users...");
+
+        const sortedUsers = await collection.find().sort({ location: 1 }).toArray();
+        console.log("Sorted users:", sortedUsers);
+
+        res.status(200).json(sortedUsers);
+    } catch (error) {
+        console.error("Error sorting profiles:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
 
 
 
