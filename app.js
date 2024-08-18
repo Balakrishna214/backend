@@ -33,17 +33,11 @@ initializeDBAndServer();
 app.get('/getProfiles', async (req, res) => {
     try {
         const db = client.db('myDatabase');
+        
+        // Retrieve all profiles from the database
+        const users = await db.collection('users').find().toArray();
 
-        // Parse limit and offset from query parameters with default values
-        const limit = parseInt(req.query.limit) || 5;
-        const offset = parseInt(req.query.offset) || 0; // Offset should typically start from 0
-
-        const users = await db.collection('users')
-            .find()
-            .skip(offset)  
-            .limit(limit) 
-            .toArray();
-
+        // Send the entire profiles array to the frontend
         res.status(200).json(users);
     } catch (error) {
         console.error("Error retrieving profiles:", error);
@@ -55,20 +49,18 @@ app.get('/sort', async (req, res) => {
     try {
         const db = client.db('myDatabase');
         const collection = db.collection('users');
-        console.log("Fetching sorted users...");
-        const limit = parseInt(req.query.limit) || 5;
-        const offset = parseInt(req.query.offset) || 0; 
-
-        const sortedUsers = await collection.find().sort({ location: 1 }).skip(offset)  
-        .limit(limit).toArray();
-        console.log("Sorted users:", sortedUsers);
-
+        
+        // Sort users by location and retrieve all sorted profiles
+        const sortedUsers = await collection.find().sort({ location: 1 }).toArray();
+        
+        // Send the entire sorted profiles array to the frontend
         res.status(200).json(sortedUsers);
     } catch (error) {
         console.error("Error sorting profiles:", error);
         res.status(500).send("Internal Server Error");
     }
 });
+
 
 app.post('/createProfile', async (req, res) => {
     try {
