@@ -40,8 +40,8 @@ app.get('/getProfiles', async (req, res) => {
 
         const users = await db.collection('users')
             .find()
-            .skip(offset) // Skip the first 'offset' number of documents
-            .limit(limit) // Limit the result to 'limit' number of documents
+            .skip(offset)  
+            .limit(limit) 
             .toArray();
 
         res.status(200).json(users);
@@ -56,8 +56,11 @@ app.get('/sort', async (req, res) => {
         const db = client.db('myDatabase');
         const collection = db.collection('users');
         console.log("Fetching sorted users...");
+        const limit = parseInt(req.query.limit) || 5;
+        const offset = parseInt(req.query.offset) || 0; 
 
-        const sortedUsers = await collection.find().sort({ location: 1 }).toArray();
+        const sortedUsers = await collection.find().sort({ location: 1 }).skip(offset)  
+        .limit(limit).toArray();
         console.log("Sorted users:", sortedUsers);
 
         res.status(200).json(sortedUsers);
