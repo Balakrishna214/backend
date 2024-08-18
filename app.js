@@ -33,13 +33,24 @@ initializeDBAndServer();
 app.get('/getProfiles', async (req, res) => {
     try {
         const db = client.db('myDatabase');
-        const users = await db.collection('users').find().toArray();
+
+        // Parse limit and offset from query parameters with default values
+        const limit = parseInt(req.query.limit) || 5;
+        const offset = parseInt(req.query.offset) || 1;
+
+        const users = await db.collection('users')
+            .find()
+            .skip(offset) // Skip the first 'offset' number of documents
+            .limit(limit) // Limit the result to 'limit' number of documents
+            .toArray();
+
         res.status(200).json(users);
     } catch (error) {
         console.error("Error retrieving profiles:", error);
         res.status(500).send("Internal Server Error");
     }
 });
+
 
 app.get('/sort', async (req, res) => {
     try {
